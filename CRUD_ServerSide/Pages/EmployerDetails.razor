@@ -1,0 +1,61 @@
+﻿@page "/employerDetails"
+@page "/employerDetails/{id:int}"
+@inject IEmployerService EmployerService
+@inject NavigationManager NavigationManager
+
+<h1>Employer Details</h1>
+
+<EditForm Model="@employer">
+    <table class="table table-bordered">
+        <tr>
+            <td>First Name: </td>
+            <td><input class="form-control col-sm-4" type="text" required @bind="employer.FirstName"/></td>
+        </tr>
+        <tr>
+            <td>Last Name: </td>
+            <td><input class="form-control col-sm-4" type="text" required @bind="employer.LastName" /></td>
+        </tr>
+        <tr> 
+            <td>Email: </td>
+            <td><input class="form-control col-sm-4" type="email" required @bind="employer.Email" /></td>
+        </tr>
+        <tr>
+            <td>Phone: </td>
+            <td><input class="form-control col-sm-4" type="tel" required @bind="employer.Phone" /></td>
+        </tr>
+        <tr>
+            <td>Age: </td>
+            <td><input class="form-control col-sm-4" type="number" @bind="employer.Age" /></td>
+        </tr>
+    </table>
+    <div style="display:flex; justify-content:center; gap:10px;">
+        <button type="submit" class="btn btn-success" @onclick="SaveEmployer">Save</button>
+        <button class="btn btn-danger" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int id { get; set;  }
+
+    private Employer employer = new Employer();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(id != 0)
+        {
+            employer = await EmployerService.GetEmployerDetails(id);
+        }
+    }
+
+    protected async Task SaveEmployer()
+    {
+        await EmployerService.SaveEmployer(employer);
+        NavigationManager.NavigateTo("/");
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

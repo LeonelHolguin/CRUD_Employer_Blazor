@@ -1,0 +1,59 @@
+﻿@page "/employerDelete/{id:int}"
+@inject IEmployerService EmployerService
+@inject NavigationManager NavigationManager
+
+<h1>Employer Delete</h1>
+<p style="color:red; text-align:center;">Are you sure you want delete this employer?</p>
+
+<EditForm Model="@employer">
+    <table class="table table-bordered">
+        <tr>
+            <td>First Name: </td>
+            <td><input class="form-control col-sm-4" type="text" disabled @bind="employer.FirstName" /></td>
+        </tr>
+        <tr>
+            <td>Last Name: </td>
+            <td><input class="form-control col-sm-4" type="text" disabled @bind="employer.LastName" /></td>
+        </tr>
+        <tr>
+            <td>Email: </td>
+            <td><input class="form-control col-sm-4" type="email" disabled @bind="employer.Email" /></td>
+        </tr>
+        <tr>
+            <td>Phone: </td>
+            <td><input class="form-control col-sm-4" type="tel" disabled @bind="employer.Phone" /></td>
+        </tr>
+        <tr>
+            <td>Age: </td>
+            <td><input class="form-control col-sm-4" type="number" disabled @bind="employer.Age" /></td>
+        </tr>
+    </table>
+    <div style="display:flex; justify-content:center; gap:10px;">
+        <button type="submit" class="btn btn-danger" @onclick="DeleteEmployer">Delete</button>
+        <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public int id { get; set; }
+
+    private Employer employer = new Employer();
+
+    protected override async Task OnInitializedAsync()
+    {
+        employer = await EmployerService.GetEmployerDetails(id);
+    }
+
+    protected async Task DeleteEmployer()
+    {
+        await EmployerService.DeleteEmployer(id);
+        NavigationManager.NavigateTo("/");
+    }
+
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

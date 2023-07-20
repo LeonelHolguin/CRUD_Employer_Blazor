@@ -1,0 +1,68 @@
+﻿@page "/"
+@inject IEmployerService EmployerService
+@using CRUD_ServerSide.Components;
+
+<h1>Employers</h1>
+
+<p>This page shows a list of all employers.</p>
+@Message
+
+<div>
+    <RedirectButton 
+        Url="/employerDetails"
+        Text="New Employer" 
+        StyleBoostrap="btn btn-success" />
+</div>
+
+@if(employers == null)
+{
+    <p><em>Loading...</em></p>
+} else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fist Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var employer in employers)
+            {
+                var urlEdit = $"/employerDetails/{employer.EmployerId}";
+                var urlDelete = $"/employerDelete/{employer.EmployerId}";
+                <tr>
+                    <td>@employer.FirstName</td>
+                    <td>@employer.LastName</td>
+                    <td>@employer.Email</td>
+                    <td>@employer.Phone</td>
+                    <td>@employer.Age</td>
+                    <td><RedirectButton Url="@urlEdit" StyleBoostrap="btn btn-outline-primary" Text="Edit" />
+                        <RedirectButton Url="@urlDelete" StyleBoostrap="btn btn-outline-danger" Text="Delete" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public IEnumerable<Employer> employers { get; set; }
+    public string Message { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            employers = await EmployerService.GetAllEmployer();
+
+        } catch(Exception e)
+        {
+            Message = e.Message;
+        }
+
+    }
+}

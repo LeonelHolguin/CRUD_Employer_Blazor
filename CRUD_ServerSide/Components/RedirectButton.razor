@@ -1,0 +1,20 @@
+﻿@inject NavigationManager NavigationManager
+
+<button @onclick="Redirect" class=@StyleBoostrap>@Text</button> 
+
+@code {
+    [Parameter]
+    public string Url { get; set; }
+
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public string StyleBoostrap { get; set; }
+
+    protected void Redirect()
+    {
+        NavigationManager.NavigateTo(Url);
+    }
+}
+
